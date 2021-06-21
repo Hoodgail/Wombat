@@ -190,6 +190,10 @@ export default class Dom {
 
      }
 
+     get rect() {
+          return this.element.getBoundingClientRect()
+     }
+
      /**
       * Setting value to element
       * if input or select

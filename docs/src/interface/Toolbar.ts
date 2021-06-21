@@ -1,4 +1,4 @@
-import EventEmitter from "../EventEmitter.js";
+import EventEmitter from "../EventEmitter";
 import Dom from "./Dom";
 
 interface ToolbarConfig {
@@ -18,10 +18,19 @@ export default class Toolbar extends Dom {
      constructor(config: ToolbarConfig) {
           super("div", { id: "Toolbar" });
 
-          this.interval = setInterval(() => this.update(), config.interval)
+          this.interval = setInterval(() => this.update(), config.interval);
+
+          this.add(
+               this.time
+          )
      }
 
      update() {
+          this.date = new Date();
 
+          const [match, hour, minute, second, AP] = this.date.toLocaleTimeString()
+               .match(/([0-9]+):([0-9]+):([0-9]+) ([AM|PM]+)/);
+
+          this.time.text = `${hour}:${minute} ${AP}`
      }
 }

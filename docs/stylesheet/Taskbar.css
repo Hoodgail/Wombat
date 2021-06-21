@@ -1,26 +1,35 @@
+#Taskbar {
+    position: relative;
+}
+
 #Taskbar .items {
     width: min-content;
     padding: 5px;
     background: #ffffff36;
     border-radius: 10px;
     min-width: 50%;
-    margin: 10px;
     backdrop-filter: blur(8px);
     margin-left: auto;
     box-shadow: 0px 4px 6px #00000003;
     margin-right: auto;
+}
+
+
+#Taskbar .items .content {
+    width: min-content;
+    margin:auto;
     display: flex;
 }
 
 #Taskbar .items .item {
-    margin: 3px;
+    margin-right: 5px;
+    margin-left: 5px;
     width: 35px;
     border-radius: 5px;
     transition: all 0.1s;
     height: 35px;
-    background: #f5deb32b;
+    background: #f5deb300;
     overflow: visible;
-    box-shadow: 0px 4px 6px #0000001c;
     text-align: center;
     position: relative;
 }
@@ -42,5 +51,4 @@
 
 #Taskbar .items .item:hover {
     transform:scale(1.1);
-    box-shadow: 0px 4px 6px #0000004d;
 }

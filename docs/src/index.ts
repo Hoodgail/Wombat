@@ -7,8 +7,11 @@ stylesheet("/stylesheet/Desktop.css")
 stylesheet("/stylesheet/Item.css")
 stylesheet("/stylesheet/ContextMenu.css")
 stylesheet("/stylesheet/material-icons/material-icons.css")
-stylesheet("/stylesheet/DraggableWindow.css")
+stylesheet("/stylesheet/DraggableWindow.css");
+stylesheet("/stylesheet/Toolbar.css")
 
 const root = new Root();
 
 root.create();
+
+setTimeout(() => root.resize())

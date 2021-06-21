@@ -85,11 +85,13 @@ export default class Application extends Item {
           window.emitter.addEventListener("close-window", window => {
                this.windows.delete(window.id);
 
-               if (this.taskbar) this.root.taskbar.outsert(this)
-               if (this.taskbarDefault) this.root.taskbar.updateConfig(this, { active: false });
+               if (this.windows.size === 0) {
+                    if (this.taskbar) this.root.taskbar.outsert(this)
+                    if (this.taskbarDefault) this.root.taskbar.updateConfig(this, { active: false });
+                    this.taskbar = false;
+                    this.taskbarDefault = false;
+               }
 
-               this.taskbar = false;
-               this.taskbarDefault = false;
           })
      }
 

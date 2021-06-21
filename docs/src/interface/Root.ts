@@ -72,9 +72,6 @@ export default class Root extends Dom {
      create() {
           this.body.add(this);
 
-          this.viewport.style = { height: "88%" };
-          this.taskbar.style = { height: "15%" };
-
           this.add(
                this.viewport,
                this.taskbar
@@ -85,6 +82,13 @@ export default class Root extends Dom {
           this.taskbar.insert(
                this.getApplication("File Manager")
           );
+
+     }
+
+     resize() {
+          this.taskbar.style = { height: "-webkit-fill-available" }
+
+          this.viewport.style = { height: "-webkit-fill-available" }
      }
 
 };

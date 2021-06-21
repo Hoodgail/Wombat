@@ -1,0 +1,10 @@
+#Toolbar {
+     width: fit-content;
+     position: absolute;
+     bottom: 0;
+     right: 0;
+     margin: 10px;
+     color: white;
+     font-family: arial;
+     font-size: 11px;
+}

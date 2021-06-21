@@ -3,6 +3,7 @@ import File from "./core/File";
 import Folder from "./core/Folder";
 import Item from "./core/Item";
 import Dom from "./Dom";
+import Toolbar from "./Toolbar";
 
 export interface TaskbarInsertConfig {
      active: boolean
@@ -20,6 +21,9 @@ export interface TaskbarMapValue {
 export default class Taskbar extends Dom {
 
      items: Dom = new Dom("div", { className: "items" });
+     itemsContent: Dom = new Dom("div", { className: "content" });
+
+     toolbar: Toolbar = new Toolbar({ interval: 1000 });
 
      map: Map<Item | Application | File | Folder, TaskbarMapValue> = new Map();
 
@@ -29,8 +33,11 @@ export default class Taskbar extends Dom {
      constructor() {
           super("div", { id: "Taskbar" });
 
+          this.items.add(this.itemsContent);
+
           this.add(
-               this.items
+               this.items,
+               this.toolbar
           )
      }
 
@@ -55,7 +62,7 @@ export default class Taskbar extends Dom {
      }
 
      applyConfig(config: TaskbarInsertConfig, body: Dom) {
-          body.attribute("active", config.active == false ? "false" : "true")
+          body.attribute("active", config && config.active == true ? "true" : "false")
      }
 
      updateConfig(item: Item | Application | File | Folder, config?: TaskbarInsertConfig) {
@@ -120,7 +127,7 @@ export default class Taskbar extends Dom {
 
           item.root.add(screenshot)
 
-          this.items.add(
+          this.itemsContent.add(
                body.add(
                     icon
                )
