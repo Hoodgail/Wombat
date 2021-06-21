@@ -83,7 +83,7 @@ export default class Dom {
       * 
       * @param {Array<Dom>} doms - Adding more Doms to the main dom as children
       * 
-      * @return {ThisType<Dom>}
+      * @return {Dom}
      */
      add(...doms) {
           this.element.append(...doms.map(r => r.element))
@@ -97,7 +97,7 @@ export default class Dom {
       * 
       * @param {Array<Dom>} doms - Adding more Doms to the main dom as children
       * 
-      * @return {ThisType<Dom>}
+      * @return {Dom}
      */
      pre(...doms) {
           this.element.prepend(...doms.map(r => r.element))
