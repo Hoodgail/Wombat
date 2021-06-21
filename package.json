@@ -3,10 +3,20 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "homepage": "https://github.com/Hoodgail/Wombat/",
+  "url": "https://github.com/Hoodgail/Wombat/issues",
+  "author": {
+    "name": "Hoodgail Benjamin",
+    "email": "hoodgail.ben@gamil.com",
+    "url": "http://hoodgail.com/"
+  },
+  "funding": {
+    "type": "paypal",
+    "url": "http://paypal.me/hoodgail"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
-  "author": "",
   "license": "ISC"
 }
