@@ -1,0 +1,54 @@
+#DraggableWindow {
+     top: 20px;
+     left: 147px;
+     position: absolute;
+     height: 400px;
+     width: 300px;
+     background: rgb(255 255 255 / 9%);
+     backdrop-filter: blur(9px);
+     border-radius: 10px;
+     box-shadow: 0px 4px 8px #00000033;
+     overflow: hidden;
+}
+
+#DraggableWindow > .header {
+     padding: 10px;
+     background: #ffffff1c;
+     font-family: arial;
+     color: #ffffff;
+}
+
+#DraggableWindow > .header > .title {
+     width: fit-content;
+     display: inline-block;
+}
+
+#DraggableWindow > .content {
+     height: -webkit-fill-available;
+     width: -webkit-fill-available;
+}
+
+#DraggableWindow > .header > .headerActions {
+     width: min-content;
+     height: min-content;
+     float: right;
+}
+
+#DraggableWindow > .header  > .headerActions  > .headerIcon {
+     display: inline-block;
+     cursor: pointer;
+     transition: all 0.1s;
+}
+
+#DraggableWindow > .header  > .headerActions  > .headerIcon:hover {
+     transform: scale(1.3);
+     text-shadow: 0px 1px 5px #0000004a;
+}
+
+#DraggableWindow > .header  > .headerActions  > .headerIcon:hover > .material-icons  {
+     text-shadow: 0px 1px 5px #0000004a;
+}
+
+#DraggableWindow > .header  > .headerActions > .headerIcon > .material-icons {
+     display: block;
+}
