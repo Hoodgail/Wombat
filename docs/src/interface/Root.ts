@@ -83,7 +83,7 @@ export default class Root extends Dom {
           this.viewport.add(this.desktop)
 
           this.taskbar.insert(
-               this.getApplication("FileManager")
+               this.getApplication("File Manager")
           );
      }
 

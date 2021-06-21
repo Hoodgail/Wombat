@@ -25,14 +25,14 @@ export default class Dom {
           this.setProperties(config || {})
      }
 
-     attribute(property, value) { this.element.setAttribute(property, value) }
+     attribute(property: string, value: string): void { this.element.setAttribute(property, value) }
 
      /**
      * Assign properties to the element
      *  
      * @param {Object} config - The object with properties to be assgined
      */
-     setProperties(config) {
+     setProperties(config: any): void {
           Object.keys(config)
                .forEach(name => this.property(name, config[name]));
      }
@@ -43,7 +43,7 @@ export default class Dom {
      * @param {string}   name - Property's name
      * @param {*} value - Property's value from name
     */
-     property(name, value) {
+     property(name: string, value: any): void {
           switch (name) {
                case "append":
                case "add": this.add(...value)
@@ -62,7 +62,7 @@ export default class Dom {
       * 
       * @return {Dom}
      */
-     clone(deep = false, config = {}) {
+     clone(deep: boolean = false, config: any = {}): Dom {
           return new Dom(this.element.cloneNode(deep), config);
      }
 
@@ -70,13 +70,13 @@ export default class Dom {
       * Hides the element
       * sets the style display to none
      */
-     hide() { this.display = "none"; }
+     hide(): void { this.display = "none"; }
 
      /**
       * Shows the element
       * sets the style display to block
      */
-     show() { this.display = "block"; }
+     show(): void { this.display = "block"; }
 
      /**
       * Inserts nodes after the last child of node, while replacing strings in nodes with equivalent Text nodes.
@@ -87,7 +87,7 @@ export default class Dom {
       * 
       * @return {Dom}
      */
-     add(...doms) {
+     add(...doms: Array<Dom>): Dom {
           this.element.append(...doms.map(r => r.element))
           return this
      }
@@ -101,7 +101,7 @@ export default class Dom {
       * 
       * @return {Dom}
      */
-     pre(...doms) {
+     pre(...doms: Array<Dom>): Dom {
           this.element.prepend(...doms.map(r => r.element))
           return this
      }
@@ -112,17 +112,17 @@ export default class Dom {
       * 
       * @return {String} 
      */
-     toString() { return this.element.parent ? this.element.parent.innerHTML : this.html }
+     toString(): string { return this.element.parent ? this.element.parent.innerHTML : this.element.outterHTML }
 
      /**
       * Trims the html text's string
      */
-     trim() { this.html = this.text.trim() }
+     trim(): void { this.html = this.text.trim() }
 
      /**
       * Clears the dom element
      */
-     clear() { this.element.innerHTML = "" }
+     clear(): void { this.element.innerHTML = "" }
 
      /**
       * Getting a dom children
@@ -133,7 +133,7 @@ export default class Dom {
       * 
       * @return {Dom|Array<Dom>}
      */
-     get(query = "div", config = {}, deep = false) {
+     get(query: string | HTMLElement | Element = "div", config: any = {}, deep = false): Dom | Array<Dom> {
           if (deep) {
                const elements = this.element.querySelectorAll(query);
 
@@ -167,14 +167,14 @@ export default class Dom {
 
      /**
       * Getting a dom children
-      * @param {string}   query - search query selector string
-      * @param {object} config - element config to be assigned
-      * @param {Boolean} deep - If multiple elements is to be selected
-      * @param {Element} body - parent of element to be selected from
+      * @param query - search query selector string
+      * @param config - element config to be assigned
+      * @param deep - If multiple elements is to be selected
+      * @param body - parent of element to be selected from
       * 
       * @return {Dom|Array<Dom>}
      */
-     static Get(query = "div", config = {}, deep = false, body = document) {
+     static Get(query: string = "div", config: any = {}, deep = false, body: HTMLElement | Element | Document = document): Dom | Array<Dom> {
 
           if (deep) {
                const elements = body.querySelectorAll(query);
@@ -300,7 +300,7 @@ export default class Dom {
       * dom.style = { background: "black" };
       * dom.style = "background: black";
      */
-     set style(style) {
+     set style(style: any) {
           if (typeof style == "string") {
                this.element.style = style;
                return;

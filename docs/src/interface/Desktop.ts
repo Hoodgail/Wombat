@@ -12,7 +12,9 @@ export default class Desktop extends Dom {
 
      folder = new Folder({
           name: "Desktop"
-     })
+     });
+
+     contextMenu = new ContextMenu(this.element, []);
 
      /**
       * Constructs the dom
@@ -27,13 +29,10 @@ export default class Desktop extends Dom {
           contextMenu.emitter.addEventListener("open", e => {
                const items = [];
 
-               const item = e.path.filter(e => e.id == "Item").pop();
+               const element = e.path.filter(e => e.id == "Item").pop();
 
-               if (item) {
-                    items.push(
-                         { text: 'Open', onclick: () => item.item.open() },
-                         { text: 'Delete', onclick: () => item.item.delete() },
-                    );
+               if (element && element.item.context) {
+                    items.push(...element.item.context);
 
                     contextMenu.ignore = false
                } else {

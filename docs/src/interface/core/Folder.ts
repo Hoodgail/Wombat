@@ -26,7 +26,7 @@ export default class Folder extends Item {
      }
 
      open() {
-          const app = this.root.getApplication("FileManager");
+          const app = this.root.getApplication("File Manager");
 
           app.open(this);
      }

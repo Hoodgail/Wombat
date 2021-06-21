@@ -3,9 +3,9 @@ import Dom from "../../../interface/Dom";
 export default class Calculator extends Dom {
 
      static base = location.origin + "/src/core/applications/calculator";
-     static _name = "Calculator";
+     static name = "Calculator";
      static draggable_window = {
-          title: Calculator._name,
+          title: Calculator.name,
           height: 400,
           width: 300
      };

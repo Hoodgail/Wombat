@@ -9,6 +9,8 @@ import EventEmitter from "../../EventEmitter";
  */
 export default class DraggableWindow extends Dom {
 
+     public config: any;
+
      header = new Dom("div", { className: "header" });
      content = new Dom("div", { className: "content" });
 
@@ -40,8 +42,12 @@ export default class DraggableWindow extends Dom {
                this.headerActions
           )
 
+          this.config = config;
+
           this.style = {
-               height: config.height + "px",
+               opacity: 0,
+               transition: "height 0.1s linear, opacity 0.1s",
+               height: "0px",
                width: config.width + "px"
           };
 
@@ -140,14 +146,43 @@ export default class DraggableWindow extends Dom {
           this.emitter.emit("close-window", this)
      }
 
+     randomInt(min, max) {
+          return Math.floor(Math.random() * (max - min)) + min;
+     }
+
      init(root) {
+          // make position sensitive to size and document's width
+
+          const parentRect = root.viewport.element.getBoundingClientRect();
+
+          let left = Math.random() * (parentRect.width - this.config.width);
+          let top = Math.random() * (parentRect.height - this.config.height)
+
+          this.element.style.top = top + "px";
+          this.element.style.left = left + "px";
+
           this.dragElement();
 
           root.viewport.add(this);
 
           this.content.style = {
-               height: `${this.element.offsetHeight - this.header.element.offsetHeight}px`
+               opacity: 0,
+               transition: "opacity 0.2s"
           }
+
+          setTimeout(() => {
+               this.style = {
+                    opacity: 1,
+                    height: this.config.height + "px",
+               };
+
+               setTimeout(() => {
+                    this.content.style = {
+                         opacity: 1,
+                         height: `${this.element.offsetHeight - this.header.element.offsetHeight}px`
+                    }
+               }, 200)
+          }, 10)
      }
 
 }

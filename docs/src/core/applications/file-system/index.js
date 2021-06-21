@@ -1,12 +1,13 @@
 import Folder from "../../../interface/core/Folder";
 import Dom from "../../../interface/Dom";
+import ContextMenu from "../../../interface/core/ContextMenu"
 
 export default class FileManager extends Dom {
 
      static base = location.origin + "/src/core/applications/file-system";
-     static _name = "File Manager";
+     static name = "File Manager";
      static draggable_window = {
-          title: FileManager._name,
+          title: FileManager.name,
           height: 400,
           width: 600
      };
@@ -19,7 +20,6 @@ export default class FileManager extends Dom {
      constructor() {
           super("div", { id: "FileManager" });
 
-          // @ts-ignore
           this.tree.style = `font-family: arial;
           padding: 10px;
           height: -webkit-fill-available;
@@ -29,7 +29,6 @@ export default class FileManager extends Dom {
           width: 138px;
           box-shadow: 0px 4px 6px #00000021;`;
 
-          // @ts-ignore
           this.style = `height: -webkit-fill-available;display: flex;`;
 
           this.scaleContent(80);
@@ -41,19 +40,14 @@ export default class FileManager extends Dom {
           }
      }
 
-     /**
-      * 
-      * @param {Folder} folder 
-      */
-     createFolderTree(parent, folder, open?: boolean, op?: boolean) {
-          if (typeof open === 'undefined') open = false;
-          if (typeof op === 'undefined') op = true;
+     createFolderTree(parent, folder, open, op = true, child) {
+
 
           const body = new Dom("div", { className: "folder" });
           const children = new Dom("div", { className: "children" });
 
           const icon = new Dom("span", { className: "material-icons", innerText: "folder" });
-          const name = new Dom("span", { innerText: folder.name });
+          const name = new Dom("span", { innerText: folder.meta.name });
 
           // @ts-ignore
           icon.style = `color:#ffe69a;`;
@@ -73,21 +67,26 @@ export default class FileManager extends Dom {
           // @ts-ignore
           body.style = `user-select: none;`;
 
-          const openList = () => {
-               children.clear();
-               folder.children.forEach(item => {
-                    if (item instanceof Folder) {
-                         if (item == item.folder) return;
-                         this.createFolderTree(children, item, false)
-                    }
-               });
+          children.hide();
 
+          folder.children.forEach(item => {
+               if (item instanceof Folder) {
+                    if (item == item.folder) return;
+
+                    this.createFolderTree(children, item, item == child)
+               }
+          });
+
+          name.event("dblclick", () => {
+               children.show();
                this.createFolderContent(folder);
-          }
+          });
 
-          name.event("dblclick", () => openList())
+          if (child && child.parent == folder) open = true;
 
-          if (open) openList();
+          if (open) children.show();
+
+          this.createFolderContent(child || folder);
 
           if (op == true) {
                parent.add(
@@ -109,7 +108,7 @@ export default class FileManager extends Dom {
                name: name,
                icon: icon,
                open: () => {
-                    if (item instanceof Folder) this.openFolder(item, false);
+                    if (item instanceof Folder) this.openFolder(item, false, null);
                     else item.open()
                },
                update() {
@@ -132,18 +131,40 @@ export default class FileManager extends Dom {
           )
      }
 
-     /**
-      * 
-      * @param {Folder} folder 
-      */
-     openFolder(folder, op?) {
-          this.createFolderTree(this.tree, folder, true, op);
+
+     openFolder(folder, op, child) {
+          this.createFolderTree(this.tree, folder, true, op, child);
      }
 
+     createContext() {
+          const contextMenu = new ContextMenu(this.element, []);
+
+          contextMenu.emitter.addEventListener("open", e => {
+               const items = [];
+
+               const element = e.path.filter(e => e.id == "Item").pop();
+
+               if (element && element.item.context) {
+                    items.push(...element.item.context);
+
+                    contextMenu.ignore = false
+               } else {
+                    contextMenu.ignore = true;
+               }
+
+               contextMenu.createItems(items);
+          })
+
+          contextMenu.install();
+     }
+
+
      create(root, folder) {
-          this.openFolder(folder || root.desktop.folder)
+          this.openFolder(root.desktop.folder, true, folder);
 
           this.add(this.tree, this.content);
+
+          this.createContext()
 
           this.content.style = {
                width: `${this.element.offsetWidth - this.tree.element.offsetWidth}px`

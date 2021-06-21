@@ -4,6 +4,16 @@ import Folder from "./core/Folder";
 import Item from "./core/Item";
 import Dom from "./Dom";
 
+export interface TaskbarInsertConfig {
+     active: boolean
+}
+
+export interface TaskbarMapValue {
+     body: Dom,
+     icon: Dom,
+     config: TaskbarInsertConfig
+}
+
 /**
  * Taskbar dom interface
  */
@@ -11,7 +21,7 @@ export default class Taskbar extends Dom {
 
      items: Dom = new Dom("div", { className: "items" });
 
-     map: Map<Item | Application | File | Folder, any> = new Map();
+     map: Map<Item | Application | File | Folder, TaskbarMapValue> = new Map();
 
      /**
       * Constructs the dom
@@ -24,17 +34,55 @@ export default class Taskbar extends Dom {
           )
      }
 
+     includes(item: Item | Application | File | Folder): boolean {
+          return this.map.has(item)
+     }
+
+     outsert(item: Item | Application | File | Folder) {
+          if (!this.map.has(item)) return;
+
+          const { body, config } = this.map.get(item);
+
+          if (config && config.active) {
+               body.attribute("active", "false");
+               body.style = { opacity: 0 };
+               setTimeout(() => body.remove(), 100)
+          } else {
+               body.remove();
+          }
+
+          this.map.delete(item);
+     }
+
+     applyConfig(config: TaskbarInsertConfig, body: Dom) {
+          body.attribute("active", config.active == false ? "false" : "true")
+     }
+
+     updateConfig(item: Item | Application | File | Folder, config?: TaskbarInsertConfig) {
+          if (!this.map.has(item)) return;
+
+          const map = this.map.get(item);
+
+          this.applyConfig(config, map.body);
+
+          map.config = config;
+     }
+
      /**
       * Adds an application to the taskbar
       */
-     insert(item: Item | Application | File | Folder) {
+     insert(item: Item | Application | File | Folder, config?: TaskbarInsertConfig) {
 
           if (this.map.has(item)) return;
 
           const body = new Dom("div", { className: "item" });
           const screenshot = new Dom("div", { className: "screenshot" });
 
-          const icon = item.createIcon(item.meta.icon, item.meta.iconType)
+          body.style = { opacity: 0 };
+
+          const icon = item.createIcon(item.meta.icon, item.meta.iconType);
+
+          setTimeout(() => this.applyConfig(config, body), 100)
 
           body.event("dblclick", function () {
                item.open()
@@ -78,7 +126,9 @@ export default class Taskbar extends Dom {
                )
           );
 
-          return this.map.set(item, { body, icon })
+          setTimeout(() => body.style = { opacity: 1 }, 50)
+
+          return this.map.set(item, { body, icon, config })
      }
 
 }

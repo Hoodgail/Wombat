@@ -1,11 +1,10 @@
 import Dom from "../Dom";
 import EventEmitter from "../../EventEmitter";
-import Vector2 from "../../Vector2";
 import ExternalError from "./InternalError";
-import ContextMenu from "./ContextMenu";
 import DraggableWindow from "./DraggableWindow";
 import FolderEntry from "./FolderEntry";
 import Folder from "./Folder";
+import Root from "../Root";
 
 interface ItemEvent {
      name: Dom,
@@ -29,6 +28,7 @@ export default class Item extends Dom {
 
      public parentEntry: FolderEntry;
      public parent: Folder;
+     public root: Root;
 
      static nameLength: number = 255;
 
@@ -63,9 +63,6 @@ export default class Item extends Dom {
 
      icon: Dom = new Dom("div", { className: "icon" });
      name: Dom = new Dom("div", { className: "name" });
-
-     /** @type {Root} */
-     root: any = null;
 
      meta: Meta = Object.create(null);
 
@@ -146,12 +143,14 @@ export default class Item extends Dom {
 
           this.clones.set(clone.cloneId, clone);
 
+          clone.element.item = this;
+
           return clone;
      }
 
      /**
       * 
-      * @param {object} config 
+      * @param {Meta} config 
       * @param {string} config.name
       * @param {string} config.base
       * @param {string} config.icon

@@ -25,6 +25,13 @@
     position: relative;
 }
 
+#Taskbar .items .item[active=true] {
+    border-bottom: solid 2px #ffffff47;
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+    margin-top: 0px;
+}
+
 #Taskbar .items .item > img {
     height: 30px;
     margin: auto;

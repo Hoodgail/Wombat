@@ -48,6 +48,8 @@ export default class FolderEntry extends Array {
       */
      add(item: Item) {
 
+          if (this.includes(item)) return;
+
           item.parentEntry = this;
           item.parent = this.folder;
 

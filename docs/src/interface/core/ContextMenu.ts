@@ -4,10 +4,10 @@ export default class ContextMenu {
      public container: any;
      public ignore: boolean;
 
-     public _onclick: Function;
-     public _oncontextmenu: Function;
-     public _oncontextmenu_keydown: Function;
-     public _onblur: Function | any;
+     private _onclick: Function;
+     private _oncontextmenu: Function;
+     private _oncontextmenu_keydown: Function;
+     private _onblur: Function | any;
 
      public items: Array<any>;
 
@@ -34,7 +34,7 @@ export default class ContextMenu {
           this._oncontextmenu = e => {
                this.emitter.emit("open", e);
                e.preventDefault();
-               if (this.ignore) return this.hideAll();;
+               if (this.ignore) return this.hideAll();
                if (e.target != this.dom &&
                     e.target.parentElement != this.dom &&
                     !e.target.classList.contains('item') &&
@@ -195,7 +195,7 @@ export default class ContextMenu {
                     this.hideSubMenus();
 
                     this.shown = false;
-                    this.container.removeChild(this.dom);
+                    document.body.removeChild(this.dom);
 
                     if (this.parent && this.parent.shown) {
                          this.parent.hide();
@@ -212,7 +212,7 @@ export default class ContextMenu {
           if (this.dom && this.shown) {
                this.shown = false;
                this.hideSubMenus();
-               this.container.removeChild(this.dom);
+               document.body.removeChild(this.dom);
 
                if (this.parent && this.parent.shown) {
                     this.parent.hide();
@@ -224,7 +224,7 @@ export default class ContextMenu {
           for (const menu of this.submenus) {
                if (menu.shown) {
                     menu.shown = false;
-                    menu.container.removeChild(menu.dom);
+                    document.body.removeChild(menu.dom);
                }
                menu.hideSubMenus();
           }
@@ -237,7 +237,7 @@ export default class ContextMenu {
           this.dom.style.top = `${y}px`;
 
           this.shown = true;
-          this.container.appendChild(this.dom);
+          document.body.appendChild(this.dom);
      }
 
      install() {

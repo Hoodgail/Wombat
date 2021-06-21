@@ -6,6 +6,9 @@ import Item from "./Item";
  */
 export default class Application extends Item {
 
+     public taskbar: boolean
+     public taskbarDefault: boolean
+
      module = null;
 
      /**
@@ -45,6 +48,20 @@ export default class Application extends Item {
           if (this.module.draggable_window) this.openWindow(...data);
           console.timeEnd("[open] " + this.module.name);
 
+          const notInTaskbar = this.root.taskbar.includes(this);
+
+          if (!notInTaskbar) {
+               this.taskbar = true;
+               this.root.taskbar.insert(this, {
+                    active: true
+               });
+          } else {
+               this.taskbarDefault = true;
+               this.root.taskbar.updateConfig(this, {
+                    active: true
+               });
+          }
+
           this.emitter.emit("open")
      }
 
@@ -65,7 +82,15 @@ export default class Application extends Item {
 
           this.windows.set(window.id, window);
 
-          window.emitter.addEventListener("close-window", window => this.windows.delete(window.id))
+          window.emitter.addEventListener("close-window", window => {
+               this.windows.delete(window.id);
+
+               if (this.taskbar) this.root.taskbar.outsert(this)
+               if (this.taskbarDefault) this.root.taskbar.updateConfig(this, { active: false });
+
+               this.taskbar = false;
+               this.taskbarDefault = false;
+          })
      }
 
 }
