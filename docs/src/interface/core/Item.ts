@@ -1,9 +1,25 @@
-import Dom from "../Dom.js";
-import EventEmitter from "../../EventEmitter.js";
-import Vector2 from "../../Vector2.js";
-import ExternalError from "./InternalError.js";
-import ContextMenu from "./ContextMenu.js";
+import Dom from "../Dom";
+import EventEmitter from "../../EventEmitter";
+import Vector2 from "../../Vector2";
+import ExternalError from "./InternalError";
+import ContextMenu from "./ContextMenu";
+import DraggableWindow from "./DraggableWindow";
+import FolderEntry from "./FolderEntry";
+import Folder from "./Folder";
 
+interface ItemEvent {
+     name: Dom,
+     icon: Dom,
+     open: Function,
+     update: Function
+};
+
+interface Meta {
+     name: string,
+     type: string,
+     icon: string,
+     iconType: number
+}
 
 /**
  * Item constructor
@@ -11,9 +27,12 @@ import ContextMenu from "./ContextMenu.js";
  */
 export default class Item extends Dom {
 
-     static nameLength = 255;
+     public parentEntry: FolderEntry;
+     public parent: Folder;
 
-     static nameReserved = [
+     static nameLength: number = 255;
+
+     static nameReserved: Array<string> = [
           "<",
           ">",
           ":",
@@ -25,7 +44,7 @@ export default class Item extends Dom {
           "*"
      ];
 
-     static nameAvoid = [
+     static nameAvoid: Array<string> | any = [
           "PRN", "AUX", "NUL", "COM1",
           "COM2", "COM3", "COM4", "COM5",
           "COM6", "COM7", "COM8", "COM9",
@@ -34,24 +53,23 @@ export default class Item extends Dom {
           "LPT9"
      ];
 
-     emitter = new EventEmitter();
-     position = new Vector2();
+     emitter: EventEmitter = new EventEmitter();
 
      /** @type {Map<number, DraggableWindow>} */
-     windows = new Map();
+     windows: Map<number, DraggableWindow> = new Map();
 
      /** @type {Map<number, Dom>} */
-     clones = new Map();
+     clones: Map<number, Dom> = new Map();
 
-     icon = new Dom("div", { className: "icon" });
-     name = new Dom("div", { className: "name" });
+     icon: Dom = new Dom("div", { className: "icon" });
+     name: Dom = new Dom("div", { className: "name" });
 
      /** @type {Root} */
-     root = null;
+     root: any = null;
 
-     meta = Object.create(null);
+     meta: Meta = Object.create(null);
 
-     context = [
+     context: Array<any> = [
           { text: 'Open', value: 'chrome-dark', onclick: () => { } },
           { text: 'Delete', value: 'chrome-bright', onclick: () => { } }
      ]
@@ -70,11 +88,11 @@ export default class Item extends Dom {
 
      }
 
-     createEvents(config) {
+     createEvents(config: ItemEvent) {
           config.icon.event("dblclick", () => config.open());
 
           config.name.event("dblclick", () => {
-               config.name.element.setAttribute("contenteditable", true);
+               config.name.element.setAttribute("contenteditable", "true");
                config.name.element.focus();
                document.execCommand('selectAll', false, null);
 
@@ -82,7 +100,7 @@ export default class Item extends Dom {
           });
 
           config.name.event("blur", () => {
-               config.name.element.setAttribute("contenteditable", false);
+               config.name.element.setAttribute("contenteditable", "false");
 
                try {
                     const name = this.formatFileName(config.name.text);
@@ -93,14 +111,14 @@ export default class Item extends Dom {
 
                     this.emitter.emit("rename", name);
                } catch (e) {
-                    config.name.text = config.meta.name;
+                    config.name.text = this.meta.name;
                }
 
                config.update();
           })
      }
 
-     formatFileName(name) {
+     formatFileName(name: string) {
           if (name.endsWith(" ") || name.endsWith(".")) throw new ExternalError('Do not end a file or directory name with a space or a period. Although the underlying file system may support such names, the Windows shell and user interface does not. However, it is acceptable to specify a period as the first character of a name. For example, ".temp".');
 
           for (let reserved of Item.nameReserved) {
@@ -113,13 +131,13 @@ export default class Item extends Dom {
           return name.replace(/\n/gm, "").trim();
      }
 
-     rename(value) {
+     rename(value: string) {
           this.meta.name = value;
      }
 
      open() { }
 
-     createClone() {
+     createClone(): Dom {
           const clone = this.clone(true);
 
           clone.cloneId = Number(String(Math.random()).split(".").pop());
@@ -139,7 +157,7 @@ export default class Item extends Dom {
       * @param {string} config.icon
       * @param {number} config.iconType
       */
-     create(config) {
+     create(config: Meta) {
 
           Object.assign(this.meta, config);
 
@@ -159,7 +177,7 @@ export default class Item extends Dom {
           );
      }
 
-     createIcon(icon, type) {
+     createIcon(icon: string, type: number) {
           switch (type) {
                case 1:
                     return new Dom("img", { src: icon })

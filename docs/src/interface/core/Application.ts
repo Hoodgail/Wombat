@@ -1,5 +1,5 @@
-import DraggableWindow from "./DraggableWindow.js";
-import Item from "./Item.js";
+import DraggableWindow from "./DraggableWindow";
+import Item from "./Item";
 
 /**
  * Taskbar dom interface
@@ -13,12 +13,12 @@ export default class Application extends Item {
       * 
       * @argument {any} module
       */
-     constructor(module = {}) {
+     constructor(_module: any = {}) {
           super();
 
-          console.log(module.default);
+          console.log(_module);
 
-          this.module = module.default;
+          this.module = _module;
 
           this.createApplication();
      }

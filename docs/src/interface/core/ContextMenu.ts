@@ -1,6 +1,15 @@
-import EventEmitter from "../../EventEmitter.js";
+import EventEmitter from "../../EventEmitter";
 
 export default class ContextMenu {
+     public container: any;
+     public ignore: boolean;
+
+     public _onclick: Function;
+     public _oncontextmenu: Function;
+     public _oncontextmenu_keydown: Function;
+     public _onblur: Function | any;
+
+     public items: Array<any>;
 
      emitter = new EventEmitter();
 
@@ -64,7 +73,7 @@ export default class ContextMenu {
      }
 
      itemToDomEl(data) {
-          const item = document.createElement('div');
+          const item: any = document.createElement('div');
 
           if (data === null) {
                item.classList = 'separator';
@@ -77,8 +86,8 @@ export default class ContextMenu {
 
           item.classList.add('item');
 
-          const label = document.createElement('span');
-          label.classList = 'label';
+          const label: any = document.createElement('span');
+          label.classList = 'label'
           label.innerText = data.hasOwnProperty('text') ? data['text'].toString() : '';
           item.appendChild(label);
 
@@ -88,7 +97,7 @@ export default class ContextMenu {
                item.classList.add('enabled');
           }
 
-          const hotkey = document.createElement('span');
+          const hotkey: any = document.createElement('span');
           hotkey.classList = 'hotkey';
           hotkey.innerText = data.hasOwnProperty('hotkey') ? data['hotkey'].toString() : '';
           item.appendChild(hotkey);

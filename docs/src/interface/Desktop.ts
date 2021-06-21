@@ -1,9 +1,9 @@
-import Dom from "./Dom.js";
+import Dom from "./Dom";
 
-import { applications } from "../core/applications/default.js";
-import { folders } from "../core/items/default.js";
-import Folder from "./core/Folder.js";
-import ContextMenu from "./core/ContextMenu.js";
+import { applications } from "../core/applications/default";
+import { folders } from "../core/items/default";
+import Folder from "./core/Folder";
+import ContextMenu from "./core/ContextMenu";
 
 /**
  * Taskbar dom interface

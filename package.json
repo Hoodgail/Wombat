@@ -2,7 +2,6 @@
   "name": "wombat",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
   "homepage": "https://github.com/Hoodgail/Wombat/",
   "url": "https://github.com/Hoodgail/Wombat/issues",
   "author": {
@@ -15,8 +14,18 @@
     "url": "http://paypal.me/hoodgail"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "webpack",
+    "build:dev": "webpack --mode development --watch"
   },
   "keywords": [],
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "dom-to-image": "^2.6.0",
+    "webpack": "^5.39.1",
+    "webpack-cli": "^4.7.2"
+  },
+  "devDependencies": {
+    "ts-loader": "^9.2.3",
+    "typescript": "^4.3.4"
+  }
 }

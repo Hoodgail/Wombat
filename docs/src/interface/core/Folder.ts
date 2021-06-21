@@ -1,7 +1,8 @@
-import Item from "./Item.js";
-import FolderEntry from "./FolderEntry.js";
+import Item from "./Item";
+import FolderEntry from "./FolderEntry";
 
 export default class Folder extends Item {
+     public folder: any;
 
      children = new FolderEntry();
 
@@ -25,7 +26,7 @@ export default class Folder extends Item {
      }
 
      open() {
-          const app = this.root.getApplication("File Manager");
+          const app = this.root.getApplication("FileManager");
 
           app.open(this);
      }

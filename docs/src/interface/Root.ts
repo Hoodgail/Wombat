@@ -1,31 +1,38 @@
-import Dom from "./Dom.js";
+import Dom from "./Dom";
 
-import { applications } from "../core/applications/default.js";
-import { folders } from "../core/items/default.js";
+import { applications } from "../core/applications/default";
+import { folders } from "../core/items/default";
 
-import Taskbar from "./Taskbar.js";
-import Desktop from "./Desktop.js";
-import Viewport from "./Viewport.js";
+import Taskbar from "./Taskbar";
+import Desktop from "./Desktop";
+import Viewport from "./Viewport";
 
 /**
  * Root dom interface
  */
 export default class Root extends Dom {
 
-     #applications = applications;
-     #folders = folders;
-
      /**
       * @type {Dom<document.body>}
       */
-     body = new Dom(document.body)
+     body: Dom = new Dom(document.body)
 
      /** 
       * Root taskbar
       * 
       * @type {Taskbar}
       */
-     taskbar = new Taskbar();
+     taskbar: Taskbar = new Taskbar();
+
+     /**
+      * Root toolbar
+      * will be displayed after the task bar
+      * 
+      * time, notifs etc
+      * 
+      * @type {Toolbar}
+      */
+     toolbar: any = null;
 
      /** 
       * Root Viewport
@@ -35,12 +42,12 @@ export default class Root extends Dom {
       * 
       * @type {Taskbar}
       */
-     viewport = new Viewport();
+     viewport: Viewport = new Viewport();
 
      /**
       * Root desktop
       */
-     desktop = new Desktop();
+     desktop: Desktop = new Desktop();
 
      /**
       * Constructs the dom
@@ -53,7 +60,7 @@ export default class Root extends Dom {
           [...applications, ...folders].forEach(app => { app.root = this });
      };
 
-     getApplication(name) {
+     getApplication(name: string) { // what did console show i cant see anything
           return applications
                .filter(e => e.meta.name == name)
                .pop()
@@ -73,10 +80,10 @@ export default class Root extends Dom {
                this.taskbar
           );
 
-          this.viewport.add(this.desktop);
+          this.viewport.add(this.desktop)
 
           this.taskbar.insert(
-               this.getApplication("File Manager")
+               this.getApplication("FileManager")
           );
      }
 

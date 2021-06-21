@@ -36,7 +36,7 @@ export default class EventEmitter {
    * @param {any} data data to be parsed the callbacks
    * @returns 
    */
-  emit(name, data) {
+  emit(name, data?: any) {
     if (!this.#events.has(name)) return;
 
     const event = this.#events.get(name);

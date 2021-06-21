@@ -1,13 +1,17 @@
-import Folder from "./Folder.js";
-import Item from "./Item.js";
+import Application from "./Application";
+import File from "./File";
+import Folder from "./Folder";
+import Item from "./Item";
 
 export default class FolderEntry extends Array {
+     public folder: Folder;
+     public parent: Folder;
 
      /**
       * 
       * @param {Folder|Item} item 
       */
-     delete(item) {
+     delete(item: Folder | Item) {
           const index = this.indexOf(item);
 
           if (index == -1) return 1;
@@ -22,7 +26,7 @@ export default class FolderEntry extends Array {
       * @param {string} property
       * @param {any} value 
       */
-     deleteByProperty(property, value) {
+     deleteByProperty(property: string, value: any) {
           const index = this.findIndex(item => item[property] === value);
 
           const item = this[index]
@@ -34,15 +38,15 @@ export default class FolderEntry extends Array {
       * 
       * @param {string} name 
       */
-     deleteByName(name) {
+     deleteByName(name: string) {
           return this.deleteByProperty("name", name);
      }
 
      /**
       * 
-      * @param {Folder|Item} item 
+      * @param {Item} item 
       */
-     add(item) {
+     add(item: Item) {
 
           item.parentEntry = this;
           item.parent = this.folder;

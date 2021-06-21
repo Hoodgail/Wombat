@@ -1,11 +1,11 @@
-import Dom from "../../../interface/Dom.js";
+import Dom from "../../../interface/Dom";
 
 export default class Netflix extends Dom {
 
      static base = location.origin + "/src/core/applications/netflix";
-     static name = "Netflix";
+     static _name = "Netflix";
      static draggable_window = {
-          title: Netflix.name,
+          title: Netflix._name,
           height: 400,
           width: 600
      };

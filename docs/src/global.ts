@@ -13,7 +13,7 @@ export let load = 0;
  */
 export let DATA = new Map();
 
-export function update() { }
+export function update(event, path) { }
 
 /**
  * Loads javascropt code
@@ -66,7 +66,7 @@ export function preload(path) {
      load += 1;
      let now = Date.now();
      return new Promise(async (resolve, reject) => {
-          let event = {};
+          let event: any = {};
 
           try {
                let data = await fetch(path);
@@ -82,32 +82,38 @@ export function preload(path) {
      })
 }
 
+// @ts-ignore
 Number.prototype.round = function (decimals) {
      if (typeof decimals === 'undefined') decimals = 0;
      return Math.round(this * Math.pow(10, decimals)) / Math.pow(10, decimals);
 };
 
+// @ts-ignore
 Array.prototype.random = function () {
      return this[Math.floor(Math.random() * this.length)]
 }
 
+// @ts-ignore
 Array.prototype.getIndex = function (value) {
      for (let index in this) { if (value == this[index]) return index; }
      return null;
 }
 
 
+// @ts-ignore
 Number.prototype.now = function () {
      return Date.now() - this;
 }
 
+// @ts-ignore
 Math.toRadians = function (degrees) {
      return degrees * (Math.PI / 180);
 }
 
+// @ts-ignore
 Number.prototype.timeSince = function () {
      let date = new Date(this);
-     let seconds = Math.floor((new Date() - date) / 1000);
+     let seconds = Math.floor((Date.now() - date.getTime()) / 1000);
 
      let interval = seconds / 31536000;
 

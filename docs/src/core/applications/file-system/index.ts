@@ -1,12 +1,12 @@
-import Folder from "../../../interface/core/Folder.js";
-import Dom from "../../../interface/Dom.js";
+import Folder from "../../../interface/core/Folder";
+import Dom from "../../../interface/Dom";
 
 export default class FileManager extends Dom {
 
      static base = location.origin + "/src/core/applications/file-system";
-     static name = "File Manager";
+     static _name = "File Manager";
      static draggable_window = {
-          title: FileManager.name,
+          title: FileManager._name,
           height: 400,
           width: 600
      };
@@ -19,6 +19,7 @@ export default class FileManager extends Dom {
      constructor() {
           super("div", { id: "FileManager" });
 
+          // @ts-ignore
           this.tree.style = `font-family: arial;
           padding: 10px;
           height: -webkit-fill-available;
@@ -28,6 +29,7 @@ export default class FileManager extends Dom {
           width: 138px;
           box-shadow: 0px 4px 6px #00000021;`;
 
+          // @ts-ignore
           this.style = `height: -webkit-fill-available;display: flex;`;
 
           this.scaleContent(80);
@@ -43,7 +45,9 @@ export default class FileManager extends Dom {
       * 
       * @param {Folder} folder 
       */
-     createFolderTree(parent, folder, open = false, op = true) {
+     createFolderTree(parent, folder, open?: boolean, op?: boolean) {
+          if (typeof open === 'undefined') open = false;
+          if (typeof op === 'undefined') op = true;
 
           const body = new Dom("div", { className: "folder" });
           const children = new Dom("div", { className: "children" });
@@ -51,11 +55,14 @@ export default class FileManager extends Dom {
           const icon = new Dom("span", { className: "material-icons", innerText: "folder" });
           const name = new Dom("span", { innerText: folder.name });
 
+          // @ts-ignore
           icon.style = `color:#ffe69a;`;
 
+          // @ts-ignore
           children.style = `width: fit-content;
           margin-left: 25px;`;
 
+          // @ts-ignore
           name.style = `top: -7px;
           padding-left: 7px;
           position: relative;
@@ -63,6 +70,7 @@ export default class FileManager extends Dom {
           color: white;
           cursor:pointer;`;
 
+          // @ts-ignore
           body.style = `user-select: none;`;
 
           const openList = () => {
@@ -128,7 +136,7 @@ export default class FileManager extends Dom {
       * 
       * @param {Folder} folder 
       */
-     openFolder(folder, op) {
+     openFolder(folder, op?) {
           this.createFolderTree(this.tree, folder, true, op);
      }
 

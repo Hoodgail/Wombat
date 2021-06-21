@@ -1,5 +1,5 @@
-import { stylesheet } from "./global.js";
-import Root from "./interface/Root.js";
+import { stylesheet } from "./global";
+import Root from "./interface/Root";
 
 stylesheet("/stylesheet/Taskbar.css")
 stylesheet("/stylesheet/Root.css")

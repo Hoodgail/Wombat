@@ -1,18 +1,17 @@
-import Application from "./core/Application.js";
-import Item from "./core/Item.js";
-import Dom from "./Dom.js";
+import Application from "./core/Application";
+import File from "./core/File";
+import Folder from "./core/Folder";
+import Item from "./core/Item";
+import Dom from "./Dom";
 
 /**
  * Taskbar dom interface
  */
 export default class Taskbar extends Dom {
 
-     items = new Dom("div", { className: "items" });
+     items: Dom = new Dom("div", { className: "items" });
 
-     /**
-      * @type {Map<Application, Object>}
-      */
-     map = new Map();
+     map: Map<Item | Application | File | Folder, any> = new Map();
 
      /**
       * Constructs the dom
@@ -27,9 +26,8 @@ export default class Taskbar extends Dom {
 
      /**
       * Adds an application to the taskbar
-      * @param {Item} item 
       */
-     insert(item) {
+     insert(item: Item | Application | File | Folder) {
 
           if (this.map.has(item)) return;
 
@@ -55,7 +53,7 @@ export default class Taskbar extends Dom {
 
                let length = screenshots.length;
 
-               screenshot.style = {
+               screenshot.style = <any>{
                     top: `${rect.top - 150}px`,
                     right: `${rect.right + 520}px`,
                     transform: `translateX(${length + (length % 2 == 0 ? 1 : 0)}0%)`,
@@ -66,7 +64,7 @@ export default class Taskbar extends Dom {
 
           body.event("mouseleave", async () => {
 
-               screenshot.style = {
+               screenshot.style = <any>{
                     opacity: 0
                }
 

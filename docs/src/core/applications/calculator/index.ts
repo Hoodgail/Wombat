@@ -1,11 +1,11 @@
-import Dom from "../../../interface/Dom.js";
+import Dom from "../../../interface/Dom";
 
 export default class Calculator extends Dom {
 
      static base = location.origin + "/src/core/applications/calculator";
-     static name = "Calculator";
+     static _name = "Calculator";
      static draggable_window = {
-          title: Calculator.name,
+          title: Calculator._name,
           height: 400,
           width: 300
      };
@@ -15,7 +15,7 @@ export default class Calculator extends Dom {
      buttons = [];
 
      constructor() {
-          super("div", { id: Calculator.name });
+          super("div", { id: Calculator._name });
 
           this.input.style = {
                margin: "10px",
@@ -30,7 +30,7 @@ export default class Calculator extends Dom {
           };
 
           this.content.style = {
-               width: "fit-content",
+               // width: "fit-content", // no duplicates noob
                margin: "auto",
                marginTop: "40px",
                width: "67%"

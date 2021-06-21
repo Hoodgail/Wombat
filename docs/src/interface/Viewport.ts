@@ -1,4 +1,4 @@
-import Dom from "./Dom.js";
+import Dom from "./Dom";
 
 /**
  * Taskbar dom interface

@@ -1,7 +1,8 @@
-import Dom from "../Dom.js";
+import Dom from "../Dom";
 
-import domtoimage from "https://cdn.skypack.dev/dom-to-image";
-import EventEmitter from "../../EventEmitter.js";
+const domtoimage: any = null; // remove this
+// import domtoimage from 'dom-to-image'; // u need to install this
+import EventEmitter from "../../EventEmitter";
 
 /**
  * Taskbar dom interface
