@@ -1,5 +1,6 @@
 import Dom from "../../../interface/Dom";
 
+
 export default class Calculator extends Dom {
 
      static base = location.origin + "/src/core/applications/calculator";

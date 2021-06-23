@@ -1,22 +1,33 @@
-import DraggableWindow from "./DraggableWindow";
+import DraggableWindow, { DraggableWindowConfig } from "./DraggableWindow";
 import Item from "./Item";
+import Dom from "../Dom";
+
+export interface ApplicationModule extends Dom {
+     new(): ApplicationModule;
+
+     name: string;
+     base: string;
+     draggable_window: DraggableWindowConfig;
+
+     create: Function
+}
 
 /**
  * Taskbar dom interface
  */
 export default class Application extends Item {
 
-     public taskbar: boolean
-     public taskbarDefault: boolean
+     taskbar: boolean = false;
+     taskbarDefault: boolean = false;
 
-     module = null;
+     public module: ApplicationModule
 
      /**
       * Constructs the dom.
       * 
-      * @argument {any} module
+      * @argument {ApplicationModule} module
       */
-     constructor(_module: any = {}) {
+     constructor(_module: ApplicationModule) {
           super();
 
           console.log(_module);
@@ -43,7 +54,7 @@ export default class Application extends Item {
 
      }
 
-     open(...data) {
+     open(...data: any) {
           console.time("[open] " + this.module.name);
           if (this.module.draggable_window) this.openWindow(...data);
           console.timeEnd("[open] " + this.module.name);
@@ -65,7 +76,7 @@ export default class Application extends Item {
           this.emitter.emit("open")
      }
 
-     openWindow(...data) {
+     openWindow(...data: any) {
           const Build = this.module;
 
           const body = new Build();
@@ -82,7 +93,7 @@ export default class Application extends Item {
 
           this.windows.set(window.id, window);
 
-          window.emitter.addEventListener("close-window", window => {
+          window.emitter.addEventListener("close-window", (window: DraggableWindow) => {
                this.windows.delete(window.id);
 
                if (this.windows.size === 0) {

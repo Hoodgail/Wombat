@@ -1,18 +1,20 @@
-/**
- * @type {Number}
- */
-export let loaded = 0;
 
 /**
  * @type {Number}
  */
-export let load = 0;
+export let loaded: number = 0;
+
+/**
+ * @type {Number}
+ */
+export let load: number = 0;
 
 /**
  * @type {Map<string, ArrayBuffer>}
  */
-export let DATA = new Map();
+export let DATA: Map<string, ArrayBuffer> = new Map();
 
+// @ts-ignore
 export function update(event, path) { }
 
 /**
@@ -22,7 +24,7 @@ export function update(event, path) { }
  * @author Hoodgail Benjamin
  * @param {string} url javascript code url
  */
-export function javascript(url) {
+export function javascript(url: string): Promise<Event> {
      load += 1;
      return new Promise((resolve, reject) => {
           const script = document.createElement('script');
@@ -42,7 +44,7 @@ export function javascript(url) {
  * @param {string} url stylesheet css url
  * @returns {Promise<Event>}
  */
-export function stylesheet(url) {
+export function stylesheet(url: string): Promise<Event> {
      load += 1;
      return new Promise((resolve, reject) => {
           const link = document.createElement('link');
@@ -54,6 +56,11 @@ export function stylesheet(url) {
      });
 };
 
+export interface PreloadEvent {
+     timeStamp?: number;
+     error?: Error;
+}
+
 /**
  * Preload files
  *
@@ -62,11 +69,11 @@ export function stylesheet(url) {
  * @param {string} path file url path
  * @return {Promise<Event>}
  */
-export function preload(path) {
+export function preload(path: string): Promise<PreloadEvent> {
      load += 1;
      let now = Date.now();
      return new Promise(async (resolve, reject) => {
-          let event: any = {};
+          let event: PreloadEvent = {};
 
           try {
                let data = await fetch(path);
@@ -75,7 +82,7 @@ export function preload(path) {
                DATA.set(path, buffer)
 
                event.timeStamp = Date.now() - now;
-          } catch (e) { event.error = e; };
+          } catch (e) { event.error = new Error(e); };
 
           update(event, path);
           resolve(event)
@@ -85,8 +92,15 @@ export function preload(path) {
 // @ts-ignore
 Number.prototype.round = function (decimals) {
      if (typeof decimals === 'undefined') decimals = 0;
+
+     // @ts-ignore
      return Math.round(this * Math.pow(10, decimals)) / Math.pow(10, decimals);
 };
+
+interface Array {
+     random: Function;
+     getIndex: Function;
+}
 
 // @ts-ignore
 Array.prototype.random = function () {
@@ -102,6 +116,8 @@ Array.prototype.getIndex = function (value) {
 
 // @ts-ignore
 Number.prototype.now = function () {
+
+     // @ts-ignore
      return Date.now() - this;
 }
 
@@ -112,6 +128,8 @@ Math.toRadians = function (degrees) {
 
 // @ts-ignore
 Number.prototype.timeSince = function () {
+
+     // @ts-ignore
      let date = new Date(this);
      let seconds = Math.floor((Date.now() - date.getTime()) / 1000);
 

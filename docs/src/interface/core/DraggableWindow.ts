@@ -1,15 +1,28 @@
 import Dom from "../Dom";
 
-const domtoimage: any = null; // remove this
-// import domtoimage from 'dom-to-image'; // u need to install this
+// @ts-ignore
+import domtoimage from 'dom-to-image'; // u need to install this
+
 import EventEmitter from "../../EventEmitter";
+import Root from "../Root";
+
+export interface DraggableWindowConfig {
+     title: string,
+     width: number
+     height: number
+};
+
+export interface HeaderActionConfig {
+     icon: string,
+     then: Function
+}
 
 /**
  * Taskbar dom interface
  */
 export default class DraggableWindow extends Dom {
 
-     public config: any;
+     public config: DraggableWindowConfig;
 
      header = new Dom("div", { className: "header" });
      content = new Dom("div", { className: "content" });
@@ -22,12 +35,12 @@ export default class DraggableWindow extends Dom {
      emitter = new EventEmitter();
 
      /** @type {Array<Dom>} */
-     screenshots = []
+     screenshots: Array<Dom> = []
 
      /**
       * Constructs the dom
       */
-     constructor(config) {
+     constructor(config: DraggableWindowConfig) {
           super("div", { id: "DraggableWindow" });
 
           this.title.text = config.title
@@ -64,14 +77,14 @@ export default class DraggableWindow extends Dom {
       * @param {string} config.icon
       * @param {function} config.then
       */
-     headerAction(config) {
+     headerAction(config: HeaderActionConfig) {
 
           const body = new Dom("div", {
                className: "headerIcon",
                append: [new Dom("span", { className: "material-icons", innerText: config.icon })]
           });
 
-          body.event("click", e => {
+          body.event("click", (e: Event) => {
                e.stopPropagation();
                config.then();
           })
@@ -84,7 +97,7 @@ export default class DraggableWindow extends Dom {
       * 
       * @return {Dom}
       */
-     async screenshot() {
+     async screenshot(): Promise<Dom> {
           const screenshot = new Dom("img", {
                className: "screenshot",
                src: await domtoimage.toPng(this.content.element, {
@@ -102,9 +115,9 @@ export default class DraggableWindow extends Dom {
 
           let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
 
-          this.header.element.onmousedown = dragMouseDown;
+          if (this.header.element instanceof HTMLElement) this.header.element.onmousedown = dragMouseDown;
 
-          function dragMouseDown(e) {
+          function dragMouseDown(e: MouseEvent) {
                e = e || window.event;
                e.preventDefault();
                // get the mouse cursor position at startup:
@@ -115,7 +128,7 @@ export default class DraggableWindow extends Dom {
                document.onmousemove = elementDrag;
           }
 
-          function elementDrag(e) {
+          function elementDrag(e: MouseEvent) {
                e = e || window.event;
                e.preventDefault();
                // calculate the new cursor position:
@@ -124,8 +137,10 @@ export default class DraggableWindow extends Dom {
                pos3 = e.clientX;
                pos4 = e.clientY;
                // set the element's new position:
-               scope.element.style.top = (scope.element.offsetTop - pos2) + "px";
-               scope.element.style.left = (scope.element.offsetLeft - pos1) + "px";
+               if (scope.element instanceof HTMLElement) {
+                    scope.element.style.top = (scope.element.offsetTop - pos2) + "px";
+                    scope.element.style.left = (scope.element.offsetLeft - pos1) + "px";
+               }
           }
 
           function closeDragElement() {
@@ -141,48 +156,56 @@ export default class DraggableWindow extends Dom {
 
           this.screenshots.forEach(element => element.remove());
 
-          this.header.element.onmousedown = null;
+          if (this.header.element instanceof HTMLElement) this.header.element.onmousedown = null;
 
           this.emitter.emit("close-window", this)
      }
 
-     randomInt(min, max) {
+     randomInt(min: number, max: number): number {
           return Math.floor(Math.random() * (max - min)) + min;
      }
 
-     init(root) {
+     init(root: Root) {
           // make position sensitive to size and document's width
 
-          const parentRect = root.viewport.element.getBoundingClientRect();
+          if (root.viewport.element instanceof HTMLElement) {
 
-          let left = Math.random() * (parentRect.width - this.config.width);
-          let top = Math.random() * (parentRect.height - this.config.height)
+               const parentRect = root.viewport.element.getBoundingClientRect();
 
-          this.element.style.top = top + "px";
-          this.element.style.left = left + "px";
+               let left = Math.random() * (parentRect.width - this.config.width);
+               let top = Math.random() * (parentRect.height - this.config.height)
 
-          this.dragElement();
+               if (this.element instanceof HTMLElement) {
+                    this.element.style.top = top + "px";
+                    this.element.style.left = left + "px";
+               }
 
-          root.viewport.add(this);
+               this.dragElement();
 
-          this.content.style = {
-               opacity: 0,
-               transition: "opacity 0.2s"
-          }
+               root.viewport.add(this);
 
-          setTimeout(() => {
-               this.style = {
-                    opacity: 1,
-                    height: this.config.height + "px",
-               };
+               this.content.style = {
+                    opacity: 0,
+                    transition: "opacity 0.2s"
+               }
 
                setTimeout(() => {
-                    this.content.style = {
+                    this.style = {
                          opacity: 1,
-                         height: `${this.element.offsetHeight - this.header.element.offsetHeight}px`
-                    }
-               }, 200)
-          }, 10)
+                         height: this.config.height + "px",
+                    };
+
+                    setTimeout(() => {
+                         if (this.element instanceof HTMLElement && this.header.element instanceof HTMLElement) {
+                              this.content.style = {
+                                   opacity: 1,
+                                   height: `${this.element.offsetHeight - this.header.element.offsetHeight}px`
+                              }
+                         }
+                    }, 200)
+
+               }, 10)
+          }
      }
 
 }

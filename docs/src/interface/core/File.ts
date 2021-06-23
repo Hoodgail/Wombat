@@ -1,8 +1,13 @@
-import Item from "./Item";
+import Item, { Meta } from "./Item";
+
+export interface FileMeta extends Meta {
+     data: string | ArrayBuffer,
+     dataType: "utf8" | "buffer"
+}
 
 export default class File extends Item {
 
-     constructor(config) {
+     constructor(config: FileMeta) {
 
           super();
 

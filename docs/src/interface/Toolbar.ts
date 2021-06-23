@@ -7,7 +7,7 @@ interface ToolbarConfig {
 
 export default class Toolbar extends Dom {
 
-     public date: Date;
+     public date?: Date;
      public interval: NodeJS.Timeout;
 
      //** where time till be displayed */
@@ -28,9 +28,18 @@ export default class Toolbar extends Dom {
      update() {
           this.date = new Date();
 
-          const [match, hour, minute, second, AP] = this.date.toLocaleTimeString()
-               .match(/([0-9]+):([0-9]+):([0-9]+) ([AM|PM]+)/);
+          const match: RegExpMatchArray | null = this.date.toLocaleTimeString().match(/([0-9]+):([0-9]+):([0-9]+) ([AM|PM]+)/);
 
-          this.time.text = `${hour}:${minute} ${AP}`
+          if (match !== null) {
+               const [
+                    matchString,
+                    hour,
+                    minute,
+                    second,
+                    AP
+               ] = match;
+
+               this.time.text = `${hour}:${minute} ${AP}`
+          }
      }
 }

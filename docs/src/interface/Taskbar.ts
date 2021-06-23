@@ -11,7 +11,7 @@ export interface TaskbarInsertConfig {
 
 export interface TaskbarMapValue {
      body: Dom,
-     icon: Dom,
+     icon?: Dom,
      config: TaskbarInsertConfig
 }
 
@@ -48,13 +48,13 @@ export default class Taskbar extends Dom {
      outsert(item: Item | Application | File | Folder) {
           if (!this.map.has(item)) return;
 
-          const { body, config } = this.map.get(item);
+          const { body, config } = this.map.get(item) || {};
 
-          if (config && config.active) {
+          if (body && config && config.active) {
                body.attribute("active", "false");
                body.style = { opacity: 0 };
                setTimeout(() => body.remove(), 100)
-          } else {
+          } else if (body) {
                body.remove();
           }
 
@@ -70,15 +70,18 @@ export default class Taskbar extends Dom {
 
           const map = this.map.get(item);
 
-          this.applyConfig(config, map.body);
+          if (map && config !== undefined) this.applyConfig(config, map.body);
 
-          map.config = config;
+          if (map && map !== undefined) {
+
+               map.config = config || <TaskbarInsertConfig>{};
+          }
      }
 
      /**
       * Adds an application to the taskbar
       */
-     insert(item: Item | Application | File | Folder, config?: TaskbarInsertConfig) {
+     insert(item: Item | Application | File | Folder, config: TaskbarInsertConfig = <TaskbarInsertConfig>{}) {
 
           if (this.map.has(item)) return;
 
@@ -87,9 +90,7 @@ export default class Taskbar extends Dom {
 
           body.style = { opacity: 0 };
 
-          const icon = item.createIcon(item.meta.icon, item.meta.iconType);
-
-          setTimeout(() => this.applyConfig(config, body), 100)
+          setTimeout(() => this.applyConfig(config || <TaskbarInsertConfig>{}, body), 100)
 
           body.event("dblclick", function () {
                item.open()
@@ -104,16 +105,18 @@ export default class Taskbar extends Dom {
 
                screenshot.add(...screenshots);
 
-               const rect = body.element.getBoundingClientRect();
+               if (body.element instanceof HTMLElement) {
+                    const rect = body.element.getBoundingClientRect();
 
-               let length = screenshots.length;
+                    let length = screenshots.length;
 
-               screenshot.style = <any>{
-                    top: `${rect.top - 150}px`,
-                    right: `${rect.right + 520}px`,
-                    transform: `translateX(${length + (length % 2 == 0 ? 1 : 0)}0%)`,
-                    opacity: 1
-               };
+                    screenshot.style = <any>{
+                         top: `${rect.top - 150}px`,
+                         right: `${rect.right + 520}px`,
+                         transform: `translateX(${length + (length % 2 == 0 ? 1 : 0)}0%)`,
+                         opacity: 1
+                    };
+               }
 
           });
 
@@ -125,17 +128,22 @@ export default class Taskbar extends Dom {
 
           });
 
+          let proto: TaskbarMapValue = { body, config }
+
+          if (item.meta.icon !== undefined && item.meta.iconType !== undefined) {
+               proto.icon = item.createIcon(item.meta.icon, item.meta.iconType);
+               body.add(proto.icon)
+          }
+
           item.root.add(screenshot)
 
           this.itemsContent.add(
-               body.add(
-                    icon
-               )
+               body
           );
 
           setTimeout(() => body.style = { opacity: 1 }, 50)
 
-          return this.map.set(item, { body, icon, config })
+          return this.map.set(item, proto)
      }
 
 }

@@ -1,12 +1,18 @@
-import Item from "./Item";
+import Item, { Meta } from "./Item";
 import FolderEntry from "./FolderEntry";
+import Application from "./Application";
+import File from "./File";
+
+export interface FolderMeta extends Meta {
+     children?: Array<Item | Folder | Application | File>
+}
 
 export default class Folder extends Item {
      public folder: any;
 
-     children = new FolderEntry();
+     children: FolderEntry = new FolderEntry();
 
-     constructor(config) {
+     constructor(config: FolderMeta) {
 
           super();
 
@@ -28,7 +34,7 @@ export default class Folder extends Item {
      open() {
           const app = this.root.getApplication("File Manager");
 
-          app.open(this);
+          if (app !== null) app.open(this);
      }
 
 }

@@ -6,6 +6,7 @@ import { folders } from "../core/items/default";
 import Taskbar from "./Taskbar";
 import Desktop from "./Desktop";
 import Viewport from "./Viewport";
+import Application from "./core/Application";
 
 /**
  * Root dom interface
@@ -60,10 +61,10 @@ export default class Root extends Dom {
           [...applications, ...folders].forEach(app => { app.root = this });
      };
 
-     getApplication(name: string) { // what did console show i cant see anything
+     getApplication(name: string): Application | null { // what did console show i cant see anything
           return applications
                .filter(e => e.meta.name == name)
-               .pop()
+               .pop() || null
      }
 
      /**
@@ -79,9 +80,8 @@ export default class Root extends Dom {
 
           this.viewport.add(this.desktop)
 
-          this.taskbar.insert(
-               this.getApplication("File Manager")
-          );
+          const fileManager = this.getApplication("File Manager");
+          if (fileManager !== null) this.taskbar.insert(fileManager);
 
      }
 

@@ -4,8 +4,8 @@ import Folder from "./Folder";
 import Item from "./Item";
 
 export default class FolderEntry extends Array {
-     public folder: Folder;
-     public parent: Folder;
+     public folder?: Folder;
+     public parent?: Folder;
 
      /**
       * 
@@ -16,7 +16,7 @@ export default class FolderEntry extends Array {
 
           if (index == -1) return 1;
 
-          delete index[index];
+          delete this[index];
 
           return 2;
      }
@@ -51,7 +51,8 @@ export default class FolderEntry extends Array {
           if (this.includes(item)) return;
 
           item.parentEntry = this;
-          item.parent = this.folder;
+
+          if (this.folder !== undefined) item.parent = this.folder;
 
           return this.push(item);
      }

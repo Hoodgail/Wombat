@@ -14,8 +14,6 @@ export default class Desktop extends Dom {
           name: "Desktop"
      });
 
-     contextMenu = new ContextMenu(this.element, []);
-
      /**
       * Constructs the dom
       */
@@ -24,12 +22,13 @@ export default class Desktop extends Dom {
 
           this.update();
 
+          // @ts-ignore
           const contextMenu = new ContextMenu(this.element, []);
 
-          contextMenu.emitter.addEventListener("open", e => {
+          contextMenu.emitter.addEventListener("open", (e: any) => {
                const items = [];
 
-               const element = e.path.filter(e => e.id == "Item").pop();
+               const element = e.path.filter((e: Element) => e.id == "Item").pop();
 
                if (element && element.item.context) {
                     items.push(...element.item.context);

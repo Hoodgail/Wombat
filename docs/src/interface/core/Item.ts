@@ -6,18 +6,18 @@ import FolderEntry from "./FolderEntry";
 import Folder from "./Folder";
 import Root from "../Root";
 
-interface ItemEvent {
+export interface ItemEvent {
      name: Dom,
      icon: Dom,
      open: Function,
      update: Function
 };
 
-interface Meta {
+export interface Meta {
      name: string,
-     type: string,
-     icon: string,
-     iconType: number
+     type?: string,
+     icon?: string,
+     iconType?: 1 | 2
 }
 
 /**
@@ -26,9 +26,9 @@ interface Meta {
  */
 export default class Item extends Dom {
 
-     public parentEntry: FolderEntry;
-     public parent: Folder;
-     public root: Root;
+     public parentEntry!: FolderEntry;
+     public parent!: Folder;
+     public root!: Root;
 
      static nameLength: number = 255;
 
@@ -44,7 +44,7 @@ export default class Item extends Dom {
           "*"
      ];
 
-     static nameAvoid: Array<string> | any = [
+     static nameAvoid: Array<string> = [
           "PRN", "AUX", "NUL", "COM1",
           "COM2", "COM3", "COM4", "COM5",
           "COM6", "COM7", "COM8", "COM9",
@@ -64,7 +64,12 @@ export default class Item extends Dom {
      icon: Dom = new Dom("div", { className: "icon" });
      name: Dom = new Dom("div", { className: "name" });
 
-     meta: Meta = Object.create(null);
+     meta: Meta = Object.assign(Object.create(null), {
+          name: "unknown",
+          type: "file",
+          icon: "app_registration",
+          iconType: 2
+     });
 
      context: Array<any> = [
           { text: 'Open', value: 'chrome-dark', onclick: () => { } },
@@ -74,6 +79,7 @@ export default class Item extends Dom {
      constructor() {
           super("div", { id: "Item" });
 
+          // @ts-ignore
           this.element.item = this;
 
           this.createEvents({
@@ -89,26 +95,31 @@ export default class Item extends Dom {
           config.icon.event("dblclick", () => config.open());
 
           config.name.event("dblclick", () => {
-               config.name.element.setAttribute("contenteditable", "true");
-               config.name.element.focus();
-               document.execCommand('selectAll', false, null);
+
+               if (config.name.element !== null && config.name.element instanceof HTMLElement) {
+                    config.name.element.setAttribute("contenteditable", "true");
+                    config.name.element.focus();
+                    document.execCommand('selectAll', false, undefined);
+               }
 
                config.update();
           });
 
           config.name.event("blur", () => {
-               config.name.element.setAttribute("contenteditable", "false");
+               if (config.name.element instanceof HTMLElement) {
+                    config.name.element.setAttribute("contenteditable", "false");
 
-               try {
-                    const name = this.formatFileName(config.name.text);
+                    try {
+                         const name = this.formatFileName(config.name.text);
 
-                    this.rename(name)
+                         this.rename(name)
 
-                    config.name.text = name;
+                         config.name.text = name;
 
-                    this.emitter.emit("rename", name);
-               } catch (e) {
-                    config.name.text = this.meta.name;
+                         this.emitter.emit("rename", name);
+                    } catch (e) {
+                         config.name.text = this.meta.name;
+                    }
                }
 
                config.update();
@@ -122,6 +133,7 @@ export default class Item extends Dom {
                if (name.includes(reserved)) throw new ExternalError(`printable ASCII character "${reserved}" out of characters '${Item.nameReserved.join(", ")}' are forbidden.`);
           }
 
+          // @ts-ignore
           if (Item.nameAvoid.includes(name)) throw new ExternalError(`${Item.nameAvoid.join(", ")}. Also avoid these names followed immediately by an extension; for example, ${Item.nameAvoid.random()}.txt is not recommended.`)
           if (name.length > Item.nameLength) throw new ExternalError(`The API imposes a maximum filename length such that a filename, including the file path to get to the file, can't exceed ${Item.nameLength} characters.`)
 
@@ -137,14 +149,19 @@ export default class Item extends Dom {
      createClone(): Dom {
           const clone = this.clone(true);
 
+          // @ts-ignore
           clone.cloneId = Number(String(Math.random()).split(".").pop());
 
+          // @ts-ignore
           clone.element.setAttribute("clone", true);
 
+          // @ts-ignore
           this.clones.set(clone.cloneId, clone);
 
+          // @ts-ignore
           clone.element.item = this;
 
+          // @ts-ignore
           return clone;
      }
 
@@ -160,15 +177,19 @@ export default class Item extends Dom {
 
           Object.assign(this.meta, config);
 
-          this.element.setAttribute("item-type", config.type || "null");
+          if (this.element instanceof HTMLElement) {
+               this.element.setAttribute("item-type", config.type || "null");
+          }
 
           this.clear();
 
           this.name.text = config.name;
 
-          this.icon.add(
-               this.createIcon(config.icon, config.iconType || 1)
-          )
+          if (config.icon !== undefined) {
+               this.icon.add(
+                    this.createIcon(config.icon, config.iconType || 1)
+               )
+          }
 
           this.add(
                this.icon,
@@ -176,12 +197,13 @@ export default class Item extends Dom {
           );
      }
 
-     createIcon(icon: string, type: number) {
+     createIcon(icon: string, type: number): Dom {
           switch (type) {
                case 1:
                     return new Dom("img", { src: icon })
 
                case 2:
+               default:
                     return new Dom("span", { className: "material-icons", innerText: icon })
 
           }

@@ -1,7 +1,12 @@
 import Application from "../../interface/core/Application";
 
+// @ts-ignore
 import Calculator from "./calculator/index";
+
+// @ts-ignore
 import FileSystem from "./file-system/index";
+
+// @ts-ignore
 import Netflix from "./netflix/index"
 
 /**
