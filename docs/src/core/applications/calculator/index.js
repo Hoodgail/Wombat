@@ -3,7 +3,7 @@ import Dom from "../../../interface/Dom";
 
 export default class Calculator extends Dom {
 
-     static base = location.origin + "/src/core/applications/calculator";
+     static base = location.origin + location.pathname + "/src/core/applications/calculator";
      static name = "Calculator";
      static draggable_window = {
           title: Calculator.name,

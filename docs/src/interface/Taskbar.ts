@@ -4,6 +4,7 @@ import Folder from "./core/Folder";
 import Item from "./core/Item";
 import Dom from "./Dom";
 import Toolbar from "./Toolbar";
+import { root } from "../index";
 
 export interface TaskbarInsertConfig {
      active: boolean
@@ -135,7 +136,7 @@ export default class Taskbar extends Dom {
                body.add(proto.icon)
           }
 
-          item.root.add(screenshot)
+          root.add(screenshot)
 
           this.itemsContent.add(
                body

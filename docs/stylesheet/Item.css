@@ -1,54 +1,65 @@
 #Item {
-    width: min-content;
-    text-align: center;
-    color: white;
-    font-family: monospace;
-    font-size: 10px;
-    display: inline-block;
+   width: min-content;
+   text-align: center;
+   color: white;
+   font-family: monospace;
+   font-size: 10px;
+   display: inline-block;
 }
 
 #Item .icon {
-   height: 60px;
-   padding-top: 10px;
-   width: calc(60px + 10px);
-   margin: 10px;
-   background: #ffffff2b;
-   transition: all 0.1s;
-   margin-bottom: 6px;
-   border-radius: 10px;
-   box-shadow: 0px 2px 6px #0000003b;
+  height: 60px;
+  padding-top: 10px;
+  width: calc(60px + 10px);
+  margin: 10px;
+
+  background: linear-gradient(40deg, rgb(255 255 255 / 14%) 0%, rgb(255 255 255 / 40%) 100%);
+ 
+  transition: background 0.5s ease-out;  
+
+  margin-bottom: 6px;
+  border-radius: 10px;
+  box-shadow: 0px 2px 6px #0000001a;
 }
 
 #Item .icon, #Item .name , #Item .icon * {
-    -webkit-user-drag: none;
-    user-select: none;
-}
-
-#Item .icon:hover {
-   background: #8d8d8d40;
-}
-
-#Item .name[contenteditable=true] {
-   padding: 3px;
-   background: #0000001a;
-   border: solid 1px #00000030;
-   user-select: all;
-   border-radius: 50px;
-   outline: none !important;
-}
- 
-
-#Item .icon .material-icons {
-   font-size: 50px;
+   -webkit-user-drag: none;
    user-select: none;
 }
 
+#Item .icon * {
+   transition: all 0.1s;
+}
+
+#Item:hover .icon * {
+   transform:scale(1.1) rotate(-10deg);
+}
+
+
+#Item .name[contenteditable=true] {
+  padding: 3px;
+  background: #0000001a;
+  border: solid 1px #00000030;
+  user-select: all;
+  border-radius: 50px;
+  outline: none !important;
+}
+
+
+#Item .icon .material-icons {
+  font-size: 50px;
+  user-select: none;
+}
+
 #Item[item-type="folder"] .icon .material-icons {
-   color:#ffe69a;
+  background: linear-gradient(44deg, #ffbc9a 0%, #e565ff 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 #Item .icon img {
-    height: 50px;
-    display: block;
-    margin: auto;
+   height: 50px;
+   display: block;
+   margin: auto;
 }

@@ -249,7 +249,8 @@ export default class Dom {
                || this.element instanceof HTMLLIElement
                || this.element instanceof HTMLOptionElement
                || this.element instanceof HTMLProgressElement
-               || this.element instanceof HTMLParamElement)
+               || this.element instanceof HTMLParamElement
+               || this.element instanceof HTMLTextAreaElement)
                this.element.value = value
      }
 
@@ -264,7 +265,8 @@ export default class Dom {
                || this.element instanceof HTMLLIElement
                || this.element instanceof HTMLOptionElement
                || this.element instanceof HTMLProgressElement
-               || this.element instanceof HTMLParamElement)
+               || this.element instanceof HTMLParamElement
+               || this.element instanceof HTMLTextAreaElement)
                return this.element.value
           else return ""
      }

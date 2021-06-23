@@ -4,7 +4,7 @@ import ContextMenu from "../../../interface/core/ContextMenu"
 
 export default class FileManager extends Dom {
 
-     static base = location.origin + "/src/core/applications/file-system";
+     static base = location.origin + location.pathname + "/src/core/applications/file-system";
      static name = "File Manager";
      static draggable_window = {
           title: FileManager.name,
@@ -24,10 +24,10 @@ export default class FileManager extends Dom {
           padding: 10px;
           height: -webkit-fill-available;
           background: rgba(255, 255, 255, 0.1);
-          border-radius: 10px;
+          border-radius: 5px;
           margin: 10px;
           width: 138px;
-          box-shadow: 0px 4px 6px #00000021;`;
+          box-shadow: 0px 4px 6px #00000008;`;
 
           this.style = `height: -webkit-fill-available;display: flex;`;
 

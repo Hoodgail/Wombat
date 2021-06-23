@@ -2,6 +2,7 @@ import Item, { Meta } from "./Item";
 import FolderEntry from "./FolderEntry";
 import Application from "./Application";
 import File from "./File";
+import { root } from "../../index";
 
 export interface FolderMeta extends Meta {
      children?: Array<Item | Folder | Application | File>
@@ -27,12 +28,10 @@ export default class Folder extends Item {
 
           if (config.children) config.children.forEach(item => this.children.add(item));
 
-
-
      }
 
      open() {
-          const app = this.root.getApplication("File Manager");
+          const app = root.getApplication("File Manager");
 
           if (app !== null) app.open(this);
      }

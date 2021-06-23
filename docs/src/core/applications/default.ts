@@ -7,7 +7,7 @@ import Calculator from "./calculator/index";
 import FileSystem from "./file-system/index";
 
 // @ts-ignore
-import Netflix from "./netflix/index"
+import Textpad from "./textpad/index"
 
 /**
  * Default external applications.
@@ -21,7 +21,7 @@ export const applications = [
           FileSystem
      ),
      new Application(
-          Netflix
+          Textpad
      )
 
 ];

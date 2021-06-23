@@ -4,6 +4,7 @@ import Dom from "../Dom";
 import domtoimage from 'dom-to-image'; // u need to install this
 
 import EventEmitter from "../../EventEmitter";
+import { root } from "../../index";
 import Root from "../Root";
 
 export interface DraggableWindowConfig {
@@ -165,7 +166,7 @@ export default class DraggableWindow extends Dom {
           return Math.floor(Math.random() * (max - min)) + min;
      }
 
-     init(root: Root) {
+     init() {
           // make position sensitive to size and document's width
 
           if (root.viewport.element instanceof HTMLElement) {

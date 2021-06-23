@@ -1,7 +1,0 @@
-Folder: {
-  name: String,
-  children: [
-    File: {},
-    Folder: {}
-  ]
-}

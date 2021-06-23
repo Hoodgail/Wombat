@@ -1,7 +1,6 @@
 import Dom from "./Dom";
 
 import { applications } from "../core/applications/default";
-import { folders } from "../core/items/default";
 
 import Taskbar from "./Taskbar";
 import Desktop from "./Desktop";
@@ -55,10 +54,6 @@ export default class Root extends Dom {
       */
      constructor() {
           super("div", { id: "Root" });
-
-          this.desktop.folder.root = this;
-
-          [...applications, ...folders].forEach(app => { app.root = this });
      };
 
      getApplication(name: string): Application | null { // what did console show i cant see anything
@@ -82,6 +77,9 @@ export default class Root extends Dom {
 
           const fileManager = this.getApplication("File Manager");
           if (fileManager !== null) this.taskbar.insert(fileManager);
+
+          const textpad = this.getApplication("Textpad");
+          if (textpad !== null) this.taskbar.insert(textpad);
 
      }
 

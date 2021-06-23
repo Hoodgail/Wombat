@@ -10,8 +10,9 @@ stylesheet("/stylesheet/material-icons/material-icons.css")
 stylesheet("/stylesheet/DraggableWindow.css");
 stylesheet("/stylesheet/Toolbar.css")
 
-const root = new Root();
+export const root = new Root();
 
 root.create();
 
-setTimeout(() => root.resize())
+setTimeout(() => root.resize());
+

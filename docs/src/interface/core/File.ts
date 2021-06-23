@@ -1,4 +1,5 @@
 import Item, { Meta } from "./Item";
+import { root } from "../../index";
 
 export interface FileMeta extends Meta {
      data: string | ArrayBuffer,
@@ -6,6 +7,8 @@ export interface FileMeta extends Meta {
 }
 
 export default class File extends Item {
+
+     public data: string | ArrayBuffer | undefined;
 
      constructor(config: FileMeta) {
 
@@ -16,8 +19,16 @@ export default class File extends Item {
                icon: "description",
                type: "file",
                iconType: 2
-          })
+          });
 
+          this.data = config.data || undefined;
+
+     }
+
+     open() {
+          const textpad = root.getApplication("Textpad");
+
+          if (textpad !== null) textpad.open(this.data)
      }
 
 }

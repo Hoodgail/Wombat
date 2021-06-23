@@ -1,6 +1,7 @@
 import DraggableWindow, { DraggableWindowConfig } from "./DraggableWindow";
 import Item from "./Item";
 import Dom from "../Dom";
+import { root } from "../../index";
 
 export interface ApplicationModule extends Dom {
      new(): ApplicationModule;
@@ -59,16 +60,16 @@ export default class Application extends Item {
           if (this.module.draggable_window) this.openWindow(...data);
           console.timeEnd("[open] " + this.module.name);
 
-          const notInTaskbar = this.root.taskbar.includes(this);
+          const notInTaskbar = root.taskbar.includes(this);
 
           if (!notInTaskbar) {
                this.taskbar = true;
-               this.root.taskbar.insert(this, {
+               root.taskbar.insert(this, {
                     active: true
                });
           } else {
                this.taskbarDefault = true;
-               this.root.taskbar.updateConfig(this, {
+               root.taskbar.updateConfig(this, {
                     active: true
                });
           }
@@ -77,6 +78,7 @@ export default class Application extends Item {
      }
 
      openWindow(...data: any) {
+
           const Build = this.module;
 
           const body = new Build();
@@ -87,9 +89,7 @@ export default class Application extends Item {
                body
           );
 
-          window.init(this.root);
-
-          body.create(this.root, ...data);
+          window.init();
 
           this.windows.set(window.id, window);
 
@@ -97,13 +97,14 @@ export default class Application extends Item {
                this.windows.delete(window.id);
 
                if (this.windows.size === 0) {
-                    if (this.taskbar) this.root.taskbar.outsert(this)
-                    if (this.taskbarDefault) this.root.taskbar.updateConfig(this, { active: false });
+                    if (this.taskbar) root.taskbar.outsert(this)
+                    if (this.taskbarDefault) root.taskbar.updateConfig(this, { active: false });
                     this.taskbar = false;
                     this.taskbarDefault = false;
                }
-
           })
+
+          body.create(root, ...data);
      }
 
 }
