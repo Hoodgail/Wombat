@@ -225,6 +225,7 @@ export default class ContextMenu {
      }
 
      hideAll() {
+
           if (this.root && this.dom !== undefined) {
                if (this.shown) {
                     this.hideSubMenus();
@@ -241,6 +242,7 @@ export default class ContextMenu {
           }
 
           if (this.parent !== undefined) this.parent.hide();
+
      }
 
      hide() {

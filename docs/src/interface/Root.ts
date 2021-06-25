@@ -6,6 +6,10 @@ import Taskbar from "./Taskbar";
 import Desktop from "./Desktop";
 import Viewport from "./Viewport";
 import Application from "./core/Application";
+import { folders } from "../core/items/default";
+
+import Folder from "./core/Folder";
+import Start from "./core/Start";
 
 /**
  * Root dom interface
@@ -49,6 +53,8 @@ export default class Root extends Dom {
       */
      desktop: Desktop = new Desktop();
 
+     start: Start = new Start();
+
      /**
       * Constructs the dom
       */
@@ -62,6 +68,24 @@ export default class Root extends Dom {
                .pop() || null
      }
 
+     getFolder(name: string): Folder | null { // what did console show i cant see anything
+          return [this.desktop.folder, ...folders]
+               .filter(e => e.meta.name == name)
+               .pop() || null
+     }
+
+     getItemFromPath(path: string) {
+          let propComps = path.split("/root/")[1].split('/');
+          let currentObj = this.getFolder(propComps[0]) || null;
+          for (const p of propComps) {
+               if (currentObj && p !== propComps[0]) {
+                    currentObj = currentObj.children.findByProperty("name", p);
+               }
+          }
+          return currentObj;
+
+     }
+
      /**
       * Adds the root to the website's body.
       */
@@ -70,10 +94,13 @@ export default class Root extends Dom {
 
           this.add(
                this.viewport,
-               this.taskbar
+               this.taskbar,
+               this.start
           );
 
-          this.viewport.add(this.desktop)
+          this.viewport.add(this.desktop);
+
+          this.taskbar.add(this.start.launcherBody);
 
           const fileManager = this.getApplication("File Manager");
           if (fileManager !== null) this.taskbar.insert(fileManager);

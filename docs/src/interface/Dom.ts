@@ -5,7 +5,7 @@
  */
 
 
-export declare var DomElement: Element | Node | HTMLElement | Document | ParentNode | NodeListOf<Element> | null
+export declare var DomElement: Element | EventTarget | Node | HTMLElement | Document | ParentNode | NodeListOf<Element> | null
 
 export default class Dom {
      public element: typeof DomElement;
@@ -183,8 +183,8 @@ export default class Dom {
 
      /**
       * Adding an event listener
-      * @param {string}   name - event name
-      * @param {function} callback - event callback function to be called on dispatch
+      * @param {string} name - event name
+      * @param {EventListenerOrEventListenerObject} callback - event callback function to be called on dispatch
      */
      event(name: string, callback: EventListenerOrEventListenerObject) {
           if (this.element instanceof Element)
@@ -232,9 +232,10 @@ export default class Dom {
 
      }
 
-     get rect() {
+     get rect(): DOMRect {
           if (this.element instanceof Element)
                return this.element.getBoundingClientRect()
+          else return new DOMRect()
      }
 
      /**

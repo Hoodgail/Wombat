@@ -23,7 +23,7 @@ export default class Application extends Item {
 
      public module: ApplicationModule
 
-     /**
+     /**  
       * Constructs the dom.
       * 
       * @argument {ApplicationModule} module
@@ -31,7 +31,7 @@ export default class Application extends Item {
      constructor(_module: ApplicationModule) {
           super();
 
-          console.log(_module);
+          console.log("[Application installed] -", _module.name);
 
           this.module = _module;
 

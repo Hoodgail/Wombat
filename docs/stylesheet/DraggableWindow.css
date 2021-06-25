@@ -13,7 +13,7 @@
 }
 
 #DraggableWindow > .header {
-     padding: 10px;
+     padding: 7px;
      background: #ffffff1c;
      font-family: arial;
      color: #ffffff;
@@ -22,6 +22,7 @@
 #DraggableWindow > .header > .title {
      width: fit-content;
      display: inline-block;
+     font-size: 11px;
 }
 
 #DraggableWindow > .content {
@@ -52,4 +53,7 @@
 
 #DraggableWindow > .header  > .headerActions > .headerIcon > .material-icons {
      display: block;
+     font-size: 15px;
+     position: relative;
+     top: 3px;
 }

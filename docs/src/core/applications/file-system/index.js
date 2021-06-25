@@ -1,6 +1,6 @@
 import Folder from "../../../interface/core/Folder";
 import Dom from "../../../interface/Dom";
-import ContextMenu from "../../../interface/core/ContextMenu"
+import ContextMenu from "../../../interface/core/ContextMenu";
 
 export default class FileManager extends Dom {
 
@@ -13,9 +13,14 @@ export default class FileManager extends Dom {
      };
 
      navbar = new Dom("div", { className: "navbar" });
+     navbarEvents = new Dom("div", { className: "navbarEvents" });
+     navbarInput = new Dom("input", { className: "navbarInput" })
 
      tree = new Dom("div", { className: "tree" });
      content = new Dom("div", { className: "content" });
+     anchor = new Dom("div", { className: "anchor" });
+
+     childrens = new Map();
 
      constructor() {
           super("div", { id: "FileManager" });
@@ -23,15 +28,59 @@ export default class FileManager extends Dom {
           this.tree.style = `font-family: arial;
           padding: 10px;
           height: -webkit-fill-available;
-          background: rgba(255, 255, 255, 0.1);
-          border-radius: 5px;
-          margin: 10px;
-          width: 138px;
-          box-shadow: 0px 4px 6px #00000008;`;
+          background: #ffffff1c;
+          width: 138px;`;
 
-          this.style = `height: -webkit-fill-available;display: flex;`;
+          this.style = `height: -webkit-fill-available;display: flex;flex-direction: column;`;
+          this.anchor.style = `height: -webkit-fill-available;display: flex;`;
+
+          this.navbar.style = `height: 40px;
+          width: -webkit-fill-available;
+          display: flex;
+          background: #ffffff1c;`
+
+          this.navbarEvents.style = `display: flex;
+          height: fit-content;
+          margin-top: auto;
+          margin-bottom: auto;
+          margin-left: 35px;`
+
+          this.navbarInput.style = `border: none;
+          outline: none !important;
+          font-size: 11px;
+          margin: auto;
+          width: 66%;
+          padding: 5px;
+          color: white;
+          border-radius: 5px;
+          padding-left: 10px;
+          font-family: monospace;
+          background: #ffffff24;`
 
           this.scaleContent(80);
+     }
+
+     navbarEvent(config) {
+          const icon = new Dom("span", { className: "material-icons", innerText: config.icon });
+          const body = new Dom("div", {
+               className: "navbarEvent",
+               append: [icon]
+          });
+
+          icon.style = `font-size: 21px;
+          color: white;
+          display: block;`;
+
+          body.style = `height: fit-content;
+          display: inline-block;
+          cursor: pointer;`
+
+          body.event("click", e => {
+               e.stopPropagation();
+               config.then();
+          })
+
+          this.navbarEvents.add(body)
      }
 
      scaleContent(size) {
@@ -40,8 +89,7 @@ export default class FileManager extends Dom {
           }
      }
 
-     createFolderTree(parent, folder, open, op = true, child) {
-
+     createFolderTree(folder) {
 
           const body = new Dom("div", { className: "folder" });
           const children = new Dom("div", { className: "children" });
@@ -49,14 +97,11 @@ export default class FileManager extends Dom {
           const icon = new Dom("span", { className: "material-icons", innerText: "folder" });
           const name = new Dom("span", { innerText: folder.meta.name });
 
-          // @ts-ignore
           icon.style = `color:#ffe69a;`;
 
-          // @ts-ignore
           children.style = `width: fit-content;
           margin-left: 25px;`;
 
-          // @ts-ignore
           name.style = `top: -7px;
           padding-left: 7px;
           position: relative;
@@ -64,39 +109,38 @@ export default class FileManager extends Dom {
           color: white;
           cursor:pointer;`;
 
-          // @ts-ignore
           body.style = `user-select: none;`;
 
           children.hide();
 
-          folder.children.forEach(item => {
-               if (item instanceof Folder) {
-                    if (item == item.folder) return;
+          children.add(
+               ...folder.children
+                    .filter(e => e instanceof Folder)
+                    .map(e => this.createFolderTree(e))
+          )
 
-                    this.createFolderTree(children, item, item == child)
-               }
-          });
-
-          name.event("dblclick", () => {
+          const open = () => {
                children.show();
+
                this.createFolderContent(folder);
-          });
 
-          if (child && child.parent == folder) open = true;
+               this.navbarInput.value = folder.path;
 
-          if (open) children.show();
-
-          this.createFolderContent(child || folder);
-
-          if (op == true) {
-               parent.add(
-                    body.add(
-                         icon,
-                         name,
-                         children
-                    )
-               );
+               if (folder.children.filter(e => e instanceof Folder).length !== 0) {
+                    icon.text = "folder_open";
+               }
           }
+
+          name.event("dblclick", () => open());
+
+          this.childrens.set(folder, { children, open })
+
+          return body.add(
+               icon,
+               name,
+               children
+          )
+
      };
 
      createClone(item) {
@@ -108,8 +152,13 @@ export default class FileManager extends Dom {
                name: name,
                icon: icon,
                open: () => {
-                    if (item instanceof Folder) this.openFolder(item, false, null);
-                    else item.open()
+                    if (item instanceof Folder) {
+                         if (this.childrens.has(item)) {
+                              this.childrens.get(item).open();
+                         }
+                    } else {
+                         item.open()
+                    }
                },
                update() {
                     const newClone = this.createClone(item)
@@ -132,8 +181,11 @@ export default class FileManager extends Dom {
      }
 
 
-     openFolder(folder, op, child) {
-          this.createFolderTree(this.tree, folder, true, op, child);
+     openFolder(folder) {
+          this.tree.clear();
+          this.tree.add(
+               this.createFolderTree(folder)
+          )
      }
 
      createContext() {
@@ -162,9 +214,20 @@ export default class FileManager extends Dom {
      create(root, folder) {
           this.openFolder(root.desktop.folder, true, folder);
 
-          this.add(this.tree, this.content);
+          this.add(this.navbar, this.anchor);
+          this.navbar.add(this.navbarEvents, this.navbarInput)
+          this.anchor.add(this.tree, this.content);
 
           this.createContext()
+
+          this.navbarEvent({
+               icon: "arrow_back",
+               then() { }
+          })
+          this.navbarEvent({
+               icon: "arrow_forward",
+               then() { }
+          })
 
           this.content.style = {
                width: `${this.element.offsetWidth - this.tree.element.offsetWidth}px`

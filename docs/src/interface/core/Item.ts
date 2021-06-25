@@ -209,4 +209,15 @@ export default class Item extends Dom {
           }
      }
 
+     getParent(item: Item): Array<Folder> {
+          return item.parent ? [item.parent, ...this.getParent(item.parent)].filter(e => e !== undefined) : []
+     }
+
+     get path(): string {
+          return "/root/" + [...this.getParent(this), this]
+               .map(e => e.meta.name)
+               //.reverse()
+               .join("/")
+     }
+
 }

@@ -12,7 +12,7 @@ import Textpad from "./textpad/index"
 /**
  * Default external applications.
  */
-export const applications = [
+export const applications: Array<Application> = [
 
      new Application(
           Calculator

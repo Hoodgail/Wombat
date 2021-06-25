@@ -56,6 +56,14 @@ export function stylesheet(url: string): Promise<Event> {
      });
 };
 
+export function style(data: string) {
+     const style = document.createElement("style");
+
+     style.innerHTML = data;
+
+     document.body.append(style)
+}
+
 export interface PreloadEvent {
      timeStamp?: number;
      error?: Error;

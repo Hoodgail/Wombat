@@ -1,5 +1,3 @@
-import Application from "./Application";
-import File from "./File";
 import Folder from "./Folder";
 import Item from "./Item";
 
@@ -9,9 +7,9 @@ export default class FolderEntry extends Array {
 
      /**
       * 
-      * @param {Folder|Item} item 
+      * @param {Item} item 
       */
-     delete(item: Folder | Item) {
+     delete(item: Item) {
           const index = this.indexOf(item);
 
           if (index == -1) return 1;
@@ -24,14 +22,23 @@ export default class FolderEntry extends Array {
      /**
       * 
       * @param {string} property
-      * @param {any} value 
+      * @param {unknown} value 
       */
-     deleteByProperty(property: string, value: any) {
-          const index = this.findIndex(item => item[property] === value);
+     deleteByProperty(property: string, value: unknown) {
+          return this.delete(this.findByProperty(property, value));
+     }
+
+     /**
+      * 
+      * @param {string} property
+      * @param {unknown} value 
+      */
+     findByProperty(property: string, value: any) {
+          const index = this.findIndex((item) => item.meta[property] === value);
 
           const item = this[index]
 
-          return this.delete(item);
+          return item;
      }
 
      /**

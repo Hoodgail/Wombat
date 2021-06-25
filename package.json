@@ -20,7 +20,11 @@
   "keywords": [],
   "license": "ISC",
   "dependencies": {
+    "css-loader": "^5.2.6",
     "dom-to-image": "^2.6.0",
+    "file-loader": "^6.2.0",
+    "monaco-editor": "^0.25.2",
+    "style-loader": "^3.0.0",
     "webpack": "^5.39.1",
     "webpack-cli": "^4.7.2"
   },
